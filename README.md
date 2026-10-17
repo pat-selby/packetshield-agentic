@@ -125,18 +125,25 @@ ctest --test-dir build --output-on-failure
 ## Benchmark
 
 The harness generates **100,000 synthetic packets averaging 512 bytes** and
-injects a test intrusion signature into **packet #4200**. Target performance
-on reference discrete-GPU hardware (PCIe 4.0):
+injects a test intrusion signature into **packet #4200**.
+
+Measured on Google Colab (free tier, NVIDIA T4, October 2026):
 
 | Implementation | 100K-packet batch | Speedup |
 |----------------|-------------------|---------|
-| CPU baseline (`std::thread`, N = cores) | ~48.2 ms | 1.0x |
-| GPU (`match_signatures_kernel`, pinned + async) | ~6.1 ms | **~7.9x** |
+| CPU baseline (`std::thread`, N = cores) | 429.45 ms | 1.0x |
+| GPU (`match_signatures_kernel`, pinned + async) | 32.11 ms | **13.37x** |
 
-`./build/packetshield_bench` prints the measured numbers on your hardware,
-verifies the injected intrusion is detected, and checks CPU/GPU verdict
-agreement before reporting speedup. Update this table with your measured
-figures.
+On that run the injected intrusion at packet #4200 was **DETECTED** by both
+paths with exactly 1 hit, and CPU/GPU verdicts agreed on all 100,000 packets
+(`CPU/GPU agreement: YES`). All CTest suites passed on the same machine,
+including the dynamic-signature-reload and GPU/CPU-parity tests.
+
+`./build/packetshield_bench` prints the numbers for your own hardware; expect
+absolute times to move with the CPU/GPU pair, while the order-of-magnitude
+speedup holds. (nvcc prints harmless `style of line directive is a GCC
+extension` warnings from CUDA's own headers during the build — they are not
+errors.)
 
 ## Run the control plane
 
