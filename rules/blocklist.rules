@@ -1,0 +1,14 @@
+# PacketShield-Agentic blocklist rules
+# One signature per line. '#' starts a comment, blank lines are ignored.
+# The Remediation agent appends synthesized zero-day rules here and the data
+# plane picks them up via reload_signatures() with no service interruption.
+EXPLOIT_CVE_2024-8811
+DROP TABLE users;--
+../../etc/passwd
+UNION SELECT * FROM
+eval(base64_decode(
+cmd.exe /c
+wget http://evil
+%2e%2e%2f
+<script>alert(
+/bin/sh -c
